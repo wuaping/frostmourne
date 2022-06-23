@@ -43,11 +43,12 @@ public class AlarmAdminService implements IAlarmAdminService {
     private static final HashMap<String, String> metricRuleMap = new HashMap<String, String>() {
         {
             put("numeric", "numeric");
-            put("ring_than", "percentage");
+            put("ring_compare", "percentage");
             put("same_time", "percentage");
             put("object", "expression");
             put("bucket_numeric", "bucket_numeric");
             put("ping", "ping");
+            put("telnet", "ping");
         }
     };
 
@@ -473,6 +474,10 @@ public class AlarmAdminService implements IAlarmAdminService {
             return;
         }
         if (alarmContract.getMetricContract().getDataName().equalsIgnoreCase("ping")) {
+            return;
+        }
+
+        if (alarmContract.getMetricContract().getDataName().equalsIgnoreCase("telnet")) {
             return;
         }
 

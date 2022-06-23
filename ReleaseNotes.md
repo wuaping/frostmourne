@@ -1,22 +1,46 @@
-# 0.8-SNAPSHOT
+# 0.9-SNAPSHOT
+
+### Feature
+
+* 【0.9】发布0.8-RELEASE, 进入0.9开发 [2022-06-09]
+* 【0.9】增加telnet端口连通监控 [2022-06-09]
+
+### BugFix
+
+* 【0.9】修复飞书消息发送两条的问题 [2022-06-17]
+
+### Document
+
+* 【0.9】增加telnet端口监控使用指南 [telnet.md](./doc/wiki/telnet.md) [2022-06-09]
+
+# 0.8-RELEASE
 
 ### Feature
 
 * 【0.8】 发布0.7.1-RELEASE, 进入0.8-SNAPSHOT开发版 [2022-05-14]
-* 【0.8】解决邮箱报警不支持ssl的问题 [2022-05-15]
+* 【0.8】邮箱报警支持ssl [2022-05-15]
 * 【0.8】增加报警升级功能 [2022-05-15]
+* 【0.8】增加国际化支持 [2022-05-28]
+* 【0.8】mysql, clickhouse表达式规则增加TOP 50条记录数据TOP_N_DOCUMENTS [2022-05-31]
+* 【0.8】Elasticsearch数值实现环比监控 [2022-06-07]
+* 【0.8】influxdb数值实现环比监控 [2022-06-09]
+* 【0.8】增加 [iotdb](https://github.com/apache/iotdb) 数据监控报警 [2022-06-09]
 
 ### BugFix
 
 * 【0.8】解决logo不显示的问题 [2022-05-17]
+* 【0.8】解决关闭数据库连接错误调用clone方法的问题 [gitee#I58JI1](https://gitee.com/tim_guai/frostmourne/issues/I58JI1) [2022-05-21]
+* 【0.8】优化druid连接参数，修复连接超时后无法执行sql的问题 [2022-05-27]
+* 【0.8】解决消息模板列表模板类型不显示的问题 [2022-06-07]
 
 ### Mysql
 
-* 【0.8】alert_event表新增upgrade字段; recipient新增recipient字段; 新增alert_upgrade表 - [SQL](./doc/mysql-schema/2022-05-15/change.sql)[2022-05-15]
+* 【0.8】alert_event表新增upgrade字段; recipient新增recipient字段; 新增alert_upgrade表 - [SQL](./doc/mysql-schema/2022-05-15/change.sql) [2022-05-15]
 
 ### Others
 
 * 【0.8】frostmourne-core改名为frostmourne-common [2022-05-18]
+* 【0.8】metric注入逻辑重构，去掉metric map构造改成自动注入 [2022-06-09]
 
 # 0.7.1-RELEASE
 
@@ -57,8 +81,8 @@
 * elasticsearch数据源https支持pkcs12证书 [issue#71](https://github.com/AutohomeCorp/frostmourne/issues/71) [2022-04-25]
 * 数据预览前端增加参数校验提示 [2022-04-28]
 * 数据源增加Elasticsearch8支持 [issue#73](https://github.com/AutohomeCorp/frostmourne/issues/73) [2022-05-02]
-* [0.6.2] Elasticsearch数据配置支持数据分桶，分桶类型支持：1. 按字段值分组，相当于ES里的Terms Aggregation. [issue#56](https://github.com/AutohomeCorp/frostmourne/issues/56) [issue#29](https://github.com/AutohomeCorp/frostmourne/issues/29) - [SQL](./doc/mysql-schema/2022-05-03/change.sql) [2022-05-04]
-* [0.6.2] Elasticsearch数据配置支持数据分桶，分桶类型支持：2. 按时间分组,相当于ES里的DateHistogramAggregation. [issue#56](https://github.com/AutohomeCorp/frostmourne/issues/56) [issue#29](https://github.com/AutohomeCorp/frostmourne/issues/29) [2022-05-04]
+* 【0.6.2】 Elasticsearch数据配置支持数据分桶，分桶类型支持：1. 按字段值分组，相当于ES里的Terms Aggregation. [issue#56](https://github.com/AutohomeCorp/frostmourne/issues/56) [issue#29](https://github.com/AutohomeCorp/frostmourne/issues/29) - [SQL](./doc/mysql-schema/2022-05-03/change.sql) [2022-05-04]
+* 【0.6.2】 Elasticsearch数据配置支持数据分桶，分桶类型支持：2. 按时间分组,相当于ES里的DateHistogramAggregation. [issue#56](https://github.com/AutohomeCorp/frostmourne/issues/56) [issue#29](https://github.com/AutohomeCorp/frostmourne/issues/29) [2022-05-04]
 
 ### Bugfix
 

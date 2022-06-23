@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.autohome.frostmourne.monitor.model.contract.MetricContract;
+import com.autohome.frostmourne.monitor.model.enums.DataSourceType;
 import com.autohome.frostmourne.monitor.service.core.domain.MetricData;
+import com.autohome.frostmourne.monitor.service.core.metric.AbstractObjectMetric;
 import com.autohome.frostmourne.monitor.service.core.metric.IMetric;
 import com.autohome.frostmourne.monitor.service.core.query.IClickhouseDataQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Service;
  * @since 2022/5/6 18:36
  */
 @Service
-public class ClickhouseObjectMetric implements IMetric {
+public class ClickhouseObjectMetric extends AbstractObjectMetric {
 
     @Autowired
     private IClickhouseDataQuery dataQuery;
@@ -30,8 +32,16 @@ public class ClickhouseObjectMetric implements IMetric {
         if (metricData.getLatestDocument() != null) {
             result.putAll(metricData.getLatestDocument());
         }
+        if (metricData.getTopNDocuments() != null) {
+            result.put("TOP_N_DOCUMENTS", metricData.getTopNDocuments());
+        }
         Map<String, String> dataNameProperties = metricContract.getDataNameContract().getSettings();
         result.putAll(dataNameProperties);
         return result;
+    }
+
+    @Override
+    public boolean matchDataSourceType(String dataSourceType) {
+        return dataSourceType.equalsIgnoreCase(DataSourceType.clickhouse.name());
     }
 }

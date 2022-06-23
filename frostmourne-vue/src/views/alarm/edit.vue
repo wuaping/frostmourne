@@ -2,48 +2,48 @@
   <div class="app-container">
     <el-form ref="form" size="medium" label-position="right" :model="form" :rules="rules" label-width="120px">
       <el-tabs>
-        <el-tab-pane label="基础信息">
+        <el-tab-pane :label="$t('alarm.edit.label_basic')">
           <el-row>
             <el-col :span="12">
-              <el-form-item label="监控名称:" prop="alarmName">
+              <el-form-item :label="$t('alarm.edit.label_alarm_name') + ':'" prop="alarmName">
                 <el-input v-model="form.alarmName"/>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item>
-                <el-switch v-model="form.status" active-value="OPEN" active-text="开启" inactive-value="CLOSE"
-                           inactive-text="关闭"/>
+                <el-switch v-model="form.status" active-value="OPEN" :active-text="$t('alarm.edit.label_status_open')" inactive-value="CLOSE"
+                           :inactive-text="$t('alarm.edit.label_status_close')"/>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="所属服务:">
-                <el-select v-model="form.serviceInfo.id" reserve-keyword placeholder="请选择服务">
+              <el-form-item :label="$t('alarm.edit.label_service') + ':'">
+                <el-select v-model="form.serviceInfo.id" reserve-keyword :placeholder="$t('alarm.edit.input_service')">
                   <el-option v-for="item in serviceOptions" :key="item.id" :label="item.serviceName" :value="item.id"/>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="风险等级:">
-                <el-select v-model="form.riskLevel" size="small" style="width:100px" placeholder="风险等级">
-                  <el-option label="提示" value="info"/>
-                  <el-option label="重要" value="important"/>
-                  <el-option label="紧急" value="emergency"/>
-                  <el-option label="我崩了" value="crash"/>
+              <el-form-item :label="$t('alarm.edit.label_risk') + ':'">
+                <el-select v-model="form.riskLevel" size="small" style="width:100px" :placeholder="$t('alarm.edit.label_risk')">
+                  <el-option :label="$t('alarm.edit.label_info')" value="info"/>
+                  <el-option :label="$t('alarm.edit.label_important')" value="important"/>
+                  <el-option :label="$t('alarm.edit.label_emergency')" value="emergency"/>
+                  <el-option :label="$t('alarm.edit.label_crash')" value="crash"/>
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="所属对象:">
-                <el-input v-model="form.ownerKey" placeholder="表示这个监控的归属对象关系"/>
+              <el-form-item :label="$t('alarm.edit.label_owner') +  ':'">
+                <el-input v-model="form.ownerKey" :placeholder="$t('alarm.edit.label_owner_placeholder')"/>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="所属团队:" prop="teamName">
-                <el-select v-model="form.teamName" placeholder="选择团队">
+              <el-form-item :label="$t('alarm.edit.label_team') + ':'" prop="teamName">
+                <el-select v-model="form.teamName" :placeholder="$t('alarm.edit.label_team_placeholder')">
                   <el-option v-for="item in teamList" :key="item.name" :label="item.fullName" :value="item.name"/>
                 </el-select>
               </el-form-item>
@@ -52,7 +52,7 @@
 
           <el-row>
             <el-col :span="24">
-              <el-form-item label="描述:" prop="description">
+              <el-form-item :label="$t('alarm.edit.label_description') + ':'" prop="description">
                 <el-input v-model="form.description" type="textarea"/>
               </el-form-item>
             </el-col>
@@ -61,16 +61,16 @@
       </el-tabs>
 
       <el-tabs>
-        <el-tab-pane label="数据配置">
+        <el-tab-pane :label="$t('alarm.edit.label_data_config')">
           <el-row>
             <el-col :span="6">
-              <el-form-item label="数据:" prop="metricContract.dataName">
+              <el-form-item :label="$t('alarm.edit.label_data') + ':' " prop="metricContract.dataName">
                 <el-cascader v-model="dataValue" size="medium" :show-all-levels="false" :options="dataOptions"
                              @change="dataChange"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item v-if="dataSourceType === 'elasticsearch'" label="聚合类型:">
+              <el-form-item v-if="dataSourceType === 'elasticsearch'" :label="$t('alarm.edit.label_aggregation_type') + ':' ">
                 <el-select v-model="form.metricContract.aggregationType">
                   <el-option label="count" value="count"/>
                   <el-option label="avg" value="avg"/>
@@ -86,13 +86,13 @@
             <el-col :span="6">
               <el-form-item
                   v-if="dataSourceType === 'elasticsearch' && form.metricContract.aggregationType === 'percentiles'"
-                  label="百分比:">
-                <el-input v-model="form.metricContract.properties.percent" placeholder="例如: 90"/>
+                  :label="$t('alarm.edit.label_pecentile') + ':'">
+                <el-input v-model="form.metricContract.properties.percent" :placeholder="$t('alarm.edit.label_percentile_placeholder')"/>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item v-if="dataSourceType === 'elasticsearch' && form.metricContract.aggregationType !== 'count'"
-                            label="聚合字段:">
+                            :label="$t('alarm.edit.label_aggregation_field') + ':'">
                 <el-autocomplete
                     v-model="form.metricContract.aggregationField"
                     class="inline-input"
@@ -100,9 +100,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item v-if="dataSourceType === 'elasticsearch'" label="分桶类型:">
+              <el-form-item v-if="dataSourceType === 'elasticsearch'" :label="$t('alarm.edit.label_bucket_type') + ':'">
                 <el-select v-model="form.metricContract.bucketType">
-                  <el-option label="无" value="none"/>
+                  <el-option label="none" value="none"/>
                   <el-option label="terms" value="terms"/>
                   <el-option label="date_histogram" value="date_histogram"/>
                 </el-select>
@@ -110,7 +110,7 @@
             </el-col>
             <el-col :span="6">
               <el-form-item v-if="dataSourceType === 'elasticsearch' && form.metricContract.bucketType !== 'none'"
-                            label="分桶字段:">
+                            :label="$t('alarm.edit.label_bucket_field') + ':'">
                 <el-autocomplete
                     v-model="form.metricContract.bucketField"
                     class="inline-input"
@@ -158,18 +158,19 @@
           <el-form-item label="判断类型:" prop="metricContract.metricType">
             <el-select v-model="form.metricContract.metricType" @change="metricTypeChangeHandler">
               <el-option
-                  v-if="dataSourceType !== 'http' && dataSourceType !== 'ping' && dataSourceType !== 'prometheus'"
+                  v-if="dataSourceType !== 'http' && dataSourceType !== 'ping' && dataSourceType !== 'prometheus' && dataSourceType !== 'iotdb' && dataSourceType !== 'telnet'"
                   label="数值比较" value="numeric"/>
               <el-option
-                  v-if="dataSourceType === 'http' || dataSourceType === 'mysql' || dataSourceType === 'clickhouse' || dataSourceType === 'prometheus'"
+                  v-if="dataSourceType === 'http' || dataSourceType === 'mysql' || dataSourceType === 'clickhouse' || dataSourceType === 'prometheus' || dataSourceType === 'iotdb'"
                   label="Javascript表达式" value="object"/>
-              <!--<el-option label="环比" value="ring_than"/>-->
+              <el-option v-if="dataSourceType === 'elasticsearch' || dataSourceType === 'influxdb'" label="环比" value="ring_compare"/>
               <el-option
-                  v-if="dataSourceType !== 'http' && dataSourceType !== 'ping' && dataSourceType !== 'prometheus'"
+                  v-if="dataSourceType !== 'http' && dataSourceType !== 'ping' && dataSourceType !== 'prometheus' && dataSourceType !== 'iotdb' && dataSourceType !== 'telnet'"
                   label="同比" value="same_time"/>
               <el-option v-if="dataSourceType === 'elasticsearch' && form.metricContract.bucketType !== 'none'"
                          label="分桶数值比较" value="bucket_numeric"/>
               <el-option v-if="dataSourceType === 'ping'" label="ping" value="ping"/>
+              <el-option v-if="dataSourceType === 'telnet'" label="telnet" value="telnet"/>
             </el-select>
           </el-form-item>
           <el-row>
@@ -191,7 +192,7 @@
           <el-form-item v-if="form.metricContract.metricType === 'object'" label="判断表达式:">
             <el-input v-model="form.ruleContract.settings.EXPRESSION" type="textarea"/>
           </el-form-item>
-          <el-form-item v-if="form.metricContract.metricType === 'ring_than'" label="判断规则:">
+          <el-form-item v-if="form.metricContract.metricType === 'ring_compare'" label="判断规则:">
             <el-select v-model="form.ruleContract.settings.PERIOD_UNIT">
               <el-option label="周" value="week"/>
               <el-option label="日" value="day"/>
@@ -199,12 +200,21 @@
               <el-option label="分钟" value="minute"/>
             </el-select>
             环比
-            <el-select v-model="form.ruleContract.settings.DIFF_COMPARE_TYPE">
+            <el-select v-model="form.ruleContract.settings.COMPARE_TYPE">
               <el-option label="增加" value="increase"/>
               <el-option label="减少" value="decrease"/>
+              <el-option label="增加或减少" value="both"/>
             </el-select>
-            百分之
-            <el-input v-model="form.ruleContract.settings.PERCENT_THRESHOLD" style="width: 150px"/>
+            超过百分之
+            <el-input v-model="form.ruleContract.settings.PERCENTAGE_THRESHOLD" style="width: 150px"/>
+            并且差值(当前值 - 对比值)
+            <el-select v-model="form.ruleContract.settings.DIFF_COMPARE_TYPE">
+              <el-option label="绝对值>=" value="ABS_GTE"/>
+              <el-option label="绝对值<=" value="ABS_LTE"/>
+              <el-option label=">=" value="GTE"/>
+              <el-option label="<=" value="LTE"/>
+            </el-select>
+            <el-input v-model="form.ruleContract.settings.DIFF_VALUE_THRESHOLD" style="width: 100px"/>
           </el-form-item>
           <el-form-item v-if="form.metricContract.metricType === 'same_time'" label="判断规则:">
             <el-select v-model="form.ruleContract.settings.PERIOD_UNIT">
@@ -852,6 +862,9 @@ export default {
             } else if (response.result.metricContract.dataName === 'ping') {
               this.dataValue.push('ping')
               this.dataSourceType = 'ping'
+            } else if (response.result.metricContract.dataName === 'telnet') {
+              this.dataValue.push('telnet')
+              this.dataSourceType = 'telnet'
             } else if (response.result.metricContract.dataSourceContract !== null) {
               this.dataValue.push(response.result.metricContract.dataSourceContract.datasourceType)
               this.dataValue.push(response.result.metricContract.dataSourceContract.id)
@@ -887,6 +900,13 @@ export default {
         this.form.ruleContract.ruleType = 'ping'
         this.initAlertTemplateOptions()
         return
+      } else if (this.dataSourceType === 'telnet') {
+          this.form.metricContract.dataSourceId = 0
+          this.form.metricContract.dataName = 'telnet'
+          this.form.metricContract.metricType = 'telnet'
+          this.form.ruleContract.ruleType = 'ping'
+          this.initAlertTemplateOptions()
+          return
       } else if (this.dataSourceType === 'elasticsearch') {
         dataQueryApi.elasticsearchFields({dataName: value[2]}).then(response => {
           if (response.returncode === 0 && response.result) {
@@ -974,6 +994,9 @@ export default {
         this.dataOptions.push({
           value: 'ping', label: 'ping'
         })
+      this.dataOptions.push({
+          value: 'telnet', label: 'telnet'
+      })
       })
     },
     handleHttpTest() {

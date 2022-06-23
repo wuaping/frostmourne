@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.autohome.frostmourne.monitor.model.enums.MetricEnumType;
+import com.autohome.frostmourne.monitor.tool.MathUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +17,7 @@ import com.autohome.frostmourne.monitor.service.core.domain.MetricData;
 import com.autohome.frostmourne.monitor.service.core.domain.ReferenceBag;
 import com.google.common.base.Splitter;
 
-public abstract class AbstractSameTimeMetric implements IMetric {
+public abstract class AbstractSameTimeMetric extends AbstractBaseMetric {
 
     public abstract MetricData pullMetricData(DateTime start, DateTime end, MetricContract metricContract, Map<String, String> ruleSettings);
 
@@ -108,8 +110,8 @@ public abstract class AbstractSameTimeMetric implements IMetric {
         resultMap.put("PERIOD_UNIT_DESCRIPTION", findPeriodUnitDescription(periodUnit));
         Double current = null;
 
-        MetricData elasticsearchMetric = pullMetricData(start, end, metricContract, ruleSettings);
-        current = toDouble(elasticsearchMetric.getMetricValue(), 0D);
+        MetricData metricData = pullMetricData(start, end, metricContract, ruleSettings);
+        current = MathUtils.toDouble(metricData.getMetricValue(), 0D);
         resultMap.put("CURRENT", current);
         List<String> referenceTypeList = findReferenceTypeList(ruleSettings);
         List<ReferenceBag> referenceDataList = new ArrayList<>();
@@ -126,8 +128,13 @@ public abstract class AbstractSameTimeMetric implements IMetric {
         return resultMap;
     }
 
+    @Override
+    public MetricEnumType metricType() {
+        return MetricEnumType.same_time;
+    }
+
     private ReferenceBag calculateReference(DateTime start, DateTime end, String referenceType, MetricContract metricContract, Double current,
-        Map<String, String> ruleSettings) throws IOException {
+                                            Map<String, String> ruleSettings) throws IOException {
         ReferenceBag referenceBag = new ReferenceBag();
         referenceBag.setReferenceType(referenceType);
         DateTime referenceStart;
@@ -148,26 +155,10 @@ public abstract class AbstractSameTimeMetric implements IMetric {
             throw new IllegalArgumentException("unknown reference_type: " + referenceType);
         }
         MetricData elasticsearchMetric = pullMetricData(referenceStart, referenceEnd, metricContract, ruleSettings);
-        Double metricValue = toDouble(elasticsearchMetric.getMetricValue(), 0D);
-        Double percentage = calculatePercentage(current, metricValue);
+        Double metricValue = MathUtils.toDouble(elasticsearchMetric.getMetricValue(), 0D);
+        Double percentage = MathUtils.calculatePercentage(current, metricValue);
         referenceBag.setValue(metricValue);
         referenceBag.setPercentage(percentage);
         return referenceBag;
-    }
-
-    private Double toDouble(Object value, Double defaultValue) {
-        try {
-            return Double.parseDouble(value.toString());
-        } catch (Exception ex) {
-            LOGGER.error("error when toDouble, value: " + value.toString(), ex);
-            return defaultValue;
-        }
-    }
-
-    private Double calculatePercentage(Double current, Double reference) {
-        if (reference == 0) {
-            return (current - reference) * 100 / (reference + 1);
-        }
-        return (current - reference) * 100 / reference;
     }
 }

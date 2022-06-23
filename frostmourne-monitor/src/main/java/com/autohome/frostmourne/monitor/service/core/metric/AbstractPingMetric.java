@@ -1,22 +1,17 @@
 package com.autohome.frostmourne.monitor.service.core.metric;
 
-import java.io.IOException;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.autohome.frostmourne.monitor.model.contract.MetricContract;
 import com.google.common.base.Splitter;
 
-public class PingMetric implements IMetric {
+public abstract class AbstractPingMetric extends AbstractBaseMetric {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PingMetric.class);
+    public abstract boolean ping(String server);
 
     @Override
     public Map<String, Object> pullMetric(MetricContract metricContract, Map<String, String> ruleSettings) {
@@ -38,13 +33,4 @@ public class PingMetric implements IMetric {
         return result;
     }
 
-    private boolean ping(String server) {
-        try {
-            InetAddress geek = InetAddress.getByName(server);
-            return geek.isReachable(1000);
-        } catch (IOException ex) {
-            LOGGER.error("error when ping server: " + server, ex);
-            return false;
-        }
-    }
 }
