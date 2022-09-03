@@ -1,10 +1,19 @@
 package com.autohome.frostmourne.monitor.controller;
 
+import java.text.ParseException;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.autohome.frostmourne.common.exception.DataQueryException;
 import com.autohome.frostmourne.monitor.model.enums.DataSourceType;
+import com.autohome.frostmourne.monitor.schedule.CronExpression;
+import com.autohome.frostmourne.monitor.tool.LocalDateTimeUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import com.autohome.frostmourne.common.contract.Protocol;
@@ -52,9 +61,35 @@ public class AlarmController {
             dataSourceType = DataSourceType.valueOf(alarmContract.getMetricContract().getDataName());
         }
         IMetric metric = this.metricService.findMetric(dataSourceType, alarmContract.getMetricContract().getMetricType());
-        Map<String, Object> result = metric.pullMetric(alarmContract.getMetricContract(), alarmContract.getRuleContract().getSettings());
+        Map<String, Object> result = null;
+        try {
+            result = metric.pullMetric(alarmContract.getMetricContract(), alarmContract.getRuleContract().getSettings());
+        } catch (DataQueryException e) {
+            return Protocol.fail(e.getMessage());
+        }
+
         if (alarmContract.getRuleContract().getSettings() != null) {
             result.putAll(alarmContract.getRuleContract().getSettings());
+        }
+        return new Protocol<>(result);
+    }
+
+    @RequestMapping(value = "/nextTriggerTime", method = RequestMethod.GET)
+    public Protocol<List<String>> getNextTriggerTime(String cron) {
+        List<String> result = new ArrayList<>();
+        try {
+            CronExpression cronExpression = new CronExpression(cron);
+            Date lastTime = new Date();
+            for (int i = 0; i < 5; i++) {
+                lastTime = cronExpression.getNextValidTimeAfter(lastTime);
+                if (lastTime != null) {
+                    result.add(LocalDateTimeUtils.formatNormal(lastTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()));
+                } else {
+                    break;
+                }
+            }
+        } catch (ParseException e) {
+            return new Protocol<>(HttpStatus.BAD_REQUEST.value(), "Cron expression parse exception.");
         }
         return new Protocol<>(result);
     }

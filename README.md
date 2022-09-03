@@ -6,12 +6,12 @@
 <a href="https://github.com/AutohomeCorp/frostmourne/fork"><img src="https://img.shields.io/github/forks/AutohomeCorp/frostmourne" alt="GitHub Forks"></a>
 <a href="https://github.com/AutohomeCorp/frostmourne/graphs/contributors"><img src="https://img.shields.io/github/contributors/AutohomeCorp/frostmourne" alt="GitHub Contributors"></a>
 <a href="https://github.com/AutohomeCorp/frostmourne/issues"><img src="https://img.shields.io/github/issues/AutohomeCorp/frostmourne" alt="GitHub issues"></a>
-<a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-8-blue?logo=java&logoColor=white" alt="JDK support"></a>
+<a href="https://openjdk.java.net/"><img src="https://img.shields.io/badge/Java-8,11,13-blue?logo=java&logoColor=white" alt="JDK support"></a>
 <a href="https://github.com/AutohomeCorp/frostmourne/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/svelte.svg" alt="LICENSE"></a>
 <a href="https://github.com/AutohomeCorp/frostmourne"><img src="https://img.shields.io/github/downloads/AutohomeCorp/frostmourne/total.svg" alt="Downloads"></a>
 </p>
 
-[Github地址](https://github.com/AutohomeCorp/frostmourne) | [Gitee地址](https://gitee.com/tim_guai/frostmourne)
+[Github地址](https://github.com/AutohomeCorp/frostmourne) | [Gitee地址](https://gitee.com/tim_guai/frostmourne) | [中文](./README.md) | [English](./README_en.md)
 
 
 # 📖 介绍
@@ -190,7 +190,7 @@ mvn -U clean package -DskipTests=true
 
 调试环境要求
 
-* `JDK 1.8`
+* `JDK 8 ~ 14`
 * `Node 16.14.2 (推荐)`
 * `Yarn 1.22.10 (推荐) 或 Npm 8.7.0`
 * `MySQL 5.7.8+`
@@ -230,6 +230,11 @@ yarn dev
 * ~~【0.9】增加telnet端口连通监控~~ [2022-06-09]
 * ~~【0.9】修复飞书消息发送两条的问题~~ [2022-06-17]
 * ~~【0.9】增加SqlServer数据监控报警~~ [2022-06-30]
+* ~~【0.9】监控列表增加监控调度时间查看~~ [2022-08-04]
+* ~~【0.9】优化启动脚本，支持java11, java13~~ [2022-08-04]
+* ~~【0.9】告警列表组件新增日志查询~~ [2022-08-13]
+* ~~【0.9】数据源及数据名页面数据类型新增icon~~ [2022-08-13]
+* prometheus增加/api/v1/query_range查询支持
 * 增加本项目内程序日志采集至MySQL并提供查询页面，方便排查问题和监控
 * Elasticsearch数据名增加kibana链接配置，在数据查询页面增加kibana地址跳转链接，方便将数据查询切换至kibana
 * 短信报警方式实现，默认用阿里云短信实现
@@ -325,6 +330,7 @@ yarn dev
 <td><img src="https://gitee.com/tim_guai/frostmourne/raw/master/doc/img/user/jiajiayue.jpg" alt="家家悦"></td>
 <td><img src="https://gitee.com/tim_guai/frostmourne/raw/master/doc/img/user/sungrow.jpg" alt="阳光电源"></td>
 <td><img src="https://gitee.com/tim_guai/frostmourne/raw/master/doc/img/user/etcp.jpg" alt="ETCP"></td>
+<td><img src="https://raw.githubusercontent.com/AutohomeCorp/frostmourne/master/doc/img/user/lingoace.png" alt="LingoAce"></td>
 </tr>
 </table>
 

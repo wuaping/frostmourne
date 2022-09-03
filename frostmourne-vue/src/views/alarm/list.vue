@@ -18,8 +18,8 @@
     </div>
 
     <el-table v-loading="listLoading" :data="list" :header-cell-style="{'text-align':'center'}" element-loading-text="Loading" border fit highlight-current-row>
-      <el-table-column prop="id" label="ID" width="80" align="center" />
-      <el-table-column prop="alarmName" :label="$t('alarm.list.header_alarm_name')" align="left" />
+      <el-table-column prop="id" label="ID" width="60" align="center" />
+      <el-table-column prop="alarmName" :label="$t('alarm.list.header_alarm_name')" width="300" align="left" />
       <el-table-column prop="alarmType" :label="$t('alarm.list.header_alarm_type')" width="160" align="center" />
       <el-table-column prop="cron" label="Cron" width="120" align="center" />
       <el-table-column prop="status" :label="$t('alarm.list.header_is_open')" width="100" align="center">
@@ -37,6 +37,19 @@
           <span>{{ scope.row.executeAt|timeFormat }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('alarm.list.header_next_trigger_time')" width="160" align="center">
+        <template slot-scope="scope">
+          <el-popover
+            placement="bottom"
+            width="300"
+            @show="nextTriggerTime(scope.row)"
+          >
+            <h5 v-html="triggerNextTimes" />
+            <el-button slot="reference" size="small">{{ $t('buttons.view') }}</el-button>
+          </el-popover>
+        </template>
+      </el-table-column>
+
       <el-table-column prop="ownerKey" :label="$t('alarm.list.header_owner_object')" width="160" align="center" />
       <el-table-column prop="modifier" :label="$t('alarm.list.header_modifier')" width="160" align="center" />
       <el-table-column prop="modifyAt" :label="$t('alarm.list.header_last_modify_time')" width="160" align="center">
@@ -44,11 +57,12 @@
           <span>{{ scope.row.modifyAt|timeFormat }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('alarm.list.header_action')" width="300" align="center" fixed="right">
+      <el-table-column :label="$t('alarm.list.header_action')" width="400" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" icon="el-icon-edit" @click="goEdit(scope.row.id)">{{ $t('buttons.edit') }}</el-button>
-          <el-button size="mini" icon="el-icon-edit" @click="run(scope.row.id)">{{ $t('buttons.run') }}</el-button>
-          <el-button size="mini" icon="el-icon-edit" @click="remove(scope.row.id)">{{ $t('buttons.delete') }}</el-button>
+          <el-button size="mini" icon="el-icon-refresh" @click="run(scope.row.id)">{{ $t('buttons.onceRun') }}</el-button>
+          <el-button size="mini" icon="el-icon-search" @click="goLog(scope.row.id)">{{ $t('buttons.logs') }}</el-button>
+          <el-button size="mini" icon="el-icon-delete" @click="remove(scope.row.id)">{{ $t('buttons.delete') }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -111,6 +125,7 @@ export default {
         { value: 'OPEN', text: this.$t('alarm.list.input_status_open') },
         { value: 'CLOSE', text: this.$t('alarm.list.input_status_close') }
       ],
+      triggerNextTimes: '',
       teamList: [],
       serviceOptionsLoading: false,
       ServiceOptions: []
@@ -152,6 +167,12 @@ export default {
       this.form.pageIndex = 1
       this.fetchData()
     },
+    nextTriggerTime(alarm) {
+      alarmApi.nextTriggerTime(alarm.cron).then(response => {
+        const content = response.result
+        this.triggerNextTimes = content.join('<br>')
+      })
+    },
     changeStatus (alarm) {
       const message = `id=${alarm.id} Success ${alarm.status}！`
       if (alarm.status === 'OPEN') {
@@ -171,6 +192,9 @@ export default {
     },
     goEdit (id) {
       this.$router.push({ name: 'alarm-edit', query: { id: id } })
+    },
+    goLog (id) {
+      this.$router.push({ name: 'alarm-log', query: { id: id } })
     },
     run (id) {
       alarmApi.run(id).then(response => {

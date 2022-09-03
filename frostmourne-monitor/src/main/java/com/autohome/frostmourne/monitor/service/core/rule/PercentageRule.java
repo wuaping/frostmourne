@@ -11,6 +11,8 @@ import com.autohome.frostmourne.monitor.service.core.metric.IMetric;
 import com.autohome.frostmourne.monitor.service.core.template.ITemplateService;
 import com.google.common.base.Strings;
 
+
+@SuppressWarnings("unchecked")
 public class PercentageRule extends AbstractRule {
 
     public PercentageRule(ITemplateService templateService) {
@@ -20,6 +22,8 @@ public class PercentageRule extends AbstractRule {
     @Override
     public boolean verify(AlarmProcessLogger alarmProcessLogger, RuleContract ruleContract, MetricContract metricContract, IMetric metric) {
         Map<String, Object> context = context(alarmProcessLogger, ruleContract, metricContract, metric);
+        checkMetricRunState(context);
+
         Map<String, String> ruleSettings = ruleContract.getSettings();
         List<ReferenceBag> referenceDataList = findReference(context);
         boolean verifyResult = true;

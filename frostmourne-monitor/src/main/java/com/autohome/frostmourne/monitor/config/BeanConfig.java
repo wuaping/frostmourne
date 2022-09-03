@@ -29,7 +29,7 @@ import okhttp3.OkHttpClient;
 @Configuration
 public class BeanConfig {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(BeanConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BeanConfig.class);
 
     @Value("${initial.password}")
     private String initialPassword;
@@ -71,7 +71,7 @@ public class BeanConfig {
 
     @Bean
     public IAuthService authService() {
-        if (!Strings.isNullOrEmpty(ldapUrls) && ldapEnabled) {
+        if (!Strings.isNullOrEmpty(ldapUrls) && Boolean.TRUE.equals(ldapEnabled)) {
             LOGGER.info("apply ldap auth");
             return new LdapAuthService(searchFilter, ldapTemplate, initialPassword);
         }
